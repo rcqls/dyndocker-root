@@ -23,17 +23,6 @@ RUN apt-get install -y bison ruby ruby-dev
 # skip installing gem documentation
 RUN echo 'gem: --no-rdoc --no-ri' >> "$HOME/.gemrc"
 
-
-# install things globally, for great justice
-ENV GEM_HOME /usr/local/bundle
-ENV PATH $GEM_HOME/bin:$PATH
-RUN gem install bundler \
-	&& bundle config --global path "$GEM_HOME" \
-	&& bundle config --global bin "$GEM_HOME/bin"
-
-# don't create ".bundle" in all our apps
-ENV BUNDLE_APP_CONFIG $GEM_HOME
-
 ## Pandoc
 
 RUN apt-get install -y pandoc
@@ -60,11 +49,6 @@ RUN rm -fr /tmp/ttm
 
 ## R:		/dyndoc-library/R
 ENV R_LIBS_USER /dyndoc-library/R
-
-## ruby:	/dyndoc-library/ruby
-ENV GEM_PATH /dyndoc-library/ruby:$GEM_HOME
-## Last change for .gemrc to make "gem (un)install <package>" persistant  
-RUN echo "gem: --no-rdoc --no-ri -i /dyndoc-library/ruby" > ~/.gemrc
 
 
 
